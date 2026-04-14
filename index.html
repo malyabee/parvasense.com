@@ -1,126 +1,225 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ParvaSense | Smart Irrigation Intelligence</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-  <style>
-    body { font-family: 'Segoe UI', sans-serif; }
-    .hero {
-      background: linear-gradient(135deg,#0f5132,#198754);
-      color: white;
-      padding: 100px 20px;
-      text-align: center;
-    }
-    .section-title { font-weight: 700; margin-bottom: 20px; }
-    .card { border: none; box-shadow: 0 10px 25px rgba(0,0,0,0.08); border-radius: 16px; }
-    .feature-icon { font-size: 30px; margin-bottom: 10px; color:#198754; }
-    .cta { background:#198754; color:white; padding:60px 20px; text-align:center; }
-    footer { background:#111; color:#aaa; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParvaSense</title>
+    <link rel="stylesheet" href ="./style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
+<!--...................................................... navbar section........................................................... -->
+    <header class = "navbar js-navbar">
+        <div class="logo">
+            <img src="./images/logo.png">
+        </div>
+        <button class = "dashicon">&#9776;</button>
+        <button class="xIcon js-hide">&#9747;</button>
+        <nav class= "menu-items js-menu-items">
+            <ul>
+                <li>
+                    <a href ="#Home" class = "active">Home</a>
+                </li>
+                <li>
+                    <a href ="#About">About</a>
+                </li>
+                <li>
+                    <a href ="#Solutions">Solutions</a>
+                </li>
+                <li>
+                    <a href ="#products">Products</a>
+                </li>
+                <li>
+                    <a href ="contact.html">Contact</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+<!--.................................................. home landing page design....................................................  -->   
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container">
-    <a class="navbar-brand fw-bold" href="#">ParvaSense</a>
-    <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="nav">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
-        <li class="nav-item"><a class="nav-link" href="#product">Product</a></li>
-        <li class="nav-item"><a class="nav-link" href="#how">How it Works</a></li>
-        <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
-      </ul>
+    <section class="home" id="Home">
+        <div class="main">
+            <h1>Smart Irrigation, Smarter Farming.</h1>
+            <h4>Empowering agriculture with intelligent automation and precision control.</h4>
+            <p>ParvaSense is a smart irrigation system that helps save water, improve crop health, and reduce manual work. Farmers can easily control and monitor up to 256 irrigation zones from anywhere.</p>
+            <button class="cta">Get in Touch</button>
+        </div>
+    </section>
+<!--.......................................................about page design.......................................................  -->
+  
+  <section class="about" id="About">
+    <div class="about-img">
+      <img src="./images/aboutus.jpg" alt="#">
     </div>
-  </div>
-</nav>
 
-<section class="hero">
-  <h1 class="display-4 fw-bold">Smart Irrigation, Powered by Intelligence</h1>
-  <p class="lead">Save Water. Improve Yield. Automate Your Farm.</p>
-  <a href="#product" class="btn btn-light btn-lg mt-3">Explore Product</a>
+    <div class="about-content">
+      <h2 class="heading">About <span class="highlight-3">Us</span></h2>
+      <h3>Smart Agricultural Solutions</h3>
+      <p>ParvaSense is derived from the idea of <strong>Parjanya</strong>, the ancient symbol of rain and life. 
+        Just like rain nourishes the earth, our technology aims to bring efficiency and intelligence to agriculture.
+        We design and develop embedded solutions for smart irrigation, fertigation systems, and automation technologies. 
+        Our mission is to support farmers and industries with reliable, scalable, and cost-effective solutions.</p>
+      <a href="#products" class="btn">Explore Products</a>
+    </div>
+  </section>
+
+<!--.....................................................my solutions design......................................................  -->
+
+<section class="solutions" id="Solutions">
+  <h2 class="heading-4">Our <span class="highlight-4">Solutions</span></h2>
+
+  <div class="solutions-container">
+
+    <div class="solution-card">
+      <i class="fa-solid fa-cloud-rain rain-icon"></i>
+      <h4>Smart Irrigation</h4>
+      <p>Intelligent irrigation solutions that optimize water usage and automate farming operations.</p>
+      <a href="#" class="btn">Learn more</a>
+    </div>
+
+    <div class="solution-card">
+      <i class="fa-solid fa-microchip chip-icon"></i> 
+      <h4>Smart Automation</h4>
+      <p>Smart automation solutions for industrial and home applications.</p>
+      <a href="#" class="btn">Learn more</a>
+    </div>
+
+    <div class="solution-card">
+      <i class="fa-solid fa-chart-line chart-icon"></i>
+      <h4>IoT Monitoring</h4>
+      <p>Real-time monitoring systems for accurate data and system management.</p>
+      <a href="#" class="btn">Learn more</a>
+    </div>
+
+  </div>
 </section>
 
-<section class="container py-5 text-center">
-  <h2 class="section-title">Why ParvaSense?</h2>
-  <div class="row">
-    <div class="col-md-4">
-      <div class="card p-4">
-        <div class="feature-icon"><i class="fas fa-tint"></i></div>
-        <h5>Up to 60% Water Saving</h5>
-        <p>Precision irrigation using real-time soil data.</p>
+<!--.....................................................why parvasense design........................................................  -->
+
+    <section class="why" id="Why">
+    <h2 class="heading-4">Why <span class="highlight-4">ParvaSense?</span></h2>
+
+    <div class="why-container">
+
+        <div class="why-box">
+            <i class="fa-solid fa-droplet rain-icon"></i>
+            <h3>Up to 60% Water Saving</h3>
+            <p>Optimize irrigation using real-time soil and weather data to reduce water wastage.</p>
+        </div>
+
+        <div class="why-box">
+            <i class="fa-solid fa-mobile-screen chip-icon"></i>
+            <h3>Mobile Control</h3>
+            <p>Monitor and control irrigation systems remotely anytime, anywhere.</p>
+        </div>
+
+        <div class="why-box">
+            <i class="fa-solid fa-seedling grow-icon"></i>
+            <h3>Better Crop Yield</h3>
+            <p>Deliver the right amount of water at the right time for healthier crops.</p>
+        </div>
+
+    </div>
+</section>
+
+  <!--.....................................................my products design........................................................  -->
+
+<section class="products" id="products">
+  <h2 class="heading-4">Our <span class="highlight-4">Products</span></h2>
+
+  <div class="products-container">
+
+    <div class="product-card">
+      <i class="fa-solid fa-seedling grow-icon"></i>
+      <h4>Fertigation Management System</h4>
+      <p>Automates fertilizer and water delivery for optimal crop growth.</p>
+      <a href="#" class="btn">Learn more</a>
+    </div>
+
+    <div class="product-card">
+      <i class="fa-solid fa-faucet-drip drip-icon"></i>
+      <h4>Smart Irrigation Valve Controller</h4>
+      <p>Remote valve control for efficient irrigation management.</p>
+      <a href="#" class="btn">Learn more</a>
+    </div>
+
+    <div class="product-card">
+      <i class="fa-solid fa-gauge-high level-icon"></i>
+      <h4>Water Tank Level Monitoring</h4>
+      <p>Track water levels and prevent overflow or dry conditions.</p>
+      <a href="#" class="btn">Learn more</a>
+    </div>
+
+  </div>
+</section>
+  
+<!--....................................................footer design.............................................................  -->
+<footer class="foter-main">
+        <div class="container-f">
+            <div class="row-f">
+                <div class="foter-col">
+                    <img src="./images/logo.png" alt="logo" width="120">
+                    <h1>
+                      <span class="parva">Parva</span><span class="sense">Sense</span>
+                      <span class="rest"> Innovations Pvt Ltd</span>
+                    </h1>
+                </div>
+                <div class="foter-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#Home">home</a></li>
+                        <li><a href="#Solutions">Our Solutions</a></li>
+                        <li><a href="#products">Products</a></li>
+                        <li><a href="#About">About Us</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="foter-col">
+                    <h4>Useful Links</h4>
+                    <ul>
+                        <li><a href="contact.html">Get in Touch</a></li>
+                        <li><a href="#">About Our Work</a></li>
+                        <li><a href="#">Request a Project</a></li>
+                        <li><a href="#Why">Technologies We Use</a></li>
+                        <li><a href="#">Get Free Consultation</a></li>
+                    </ul>
+                </div>
+                <div class="foter-col">
+                    <h4>Follow Us</h4>
+                    <div class="soc-links"> 
+                        <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#"><i class="fa-solid fa-envelope"></i></a>
+                    </div>
+                    <div class="foter-col-2">
+                        <p>Survey No. 85/A, Panchavati Layout, Manikonda, Rai Durg, Hyderabad – 500089, Telangana, India</p>
+                        <h3><i class="fa-solid fa-phone"></i>8886 401 248</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+   <footer class="footer-main">
+      <div class="footer-text">
+        <p>Copyright &copy; 2026 by @Parvasense | All Rights Reserved.</p>
       </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card p-4">
-        <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
-        <h5>Mobile Control</h5>
-        <p>Control pumps and irrigation from anywhere.</p>
+
+      <div class="footer-iconTop">
+        <a href="#Home"><i class="fa-solid fa-angle-up"></i></a>
       </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card p-4">
-        <div class="feature-icon"><i class="fas fa-seedling"></i></div>
-        <h5>Better Crop Yield</h5>
-        <p>Right water at the right time for every crop.</p>
-      </div>
-    </div>
-  </div>
-</section>
+   </footer>
 
-<section id="product" class="bg-light py-5">
-  <div class="container text-center">
-    <h2 class="section-title">ParvaSense Smart System</h2>
-    <p class="mb-4">An IoT-powered irrigation system designed for Indian farms.</p>
-    <div class="row">
-      <div class="col-md-3"><div class="card p-3">Soil Sensors</div></div>
-      <div class="col-md-3"><div class="card p-3">Auto Pump Control</div></div>
-      <div class="col-md-3"><div class="card p-3">Mobile App</div></div>
-      <div class="col-md-3"><div class="card p-3">Water Analytics</div></div>
-    </div>
-  </div>
-</section>
+<!--.........................................................script file ...........................................................  -->
 
-<section id="how" class="container py-5 text-center">
-  <h2 class="section-title">How It Works</h2>
-  <div class="row">
-    <div class="col-md-3"><p>1. Sensors collect soil data</p></div>
-    <div class="col-md-3"><p>2. System analyzes moisture</p></div>
-    <div class="col-md-3"><p>3. Pump activates automatically</p></div>
-    <div class="col-md-3"><p>4. You monitor via mobile</p></div>
-  </div>
-</section>
+  <!--.............typed js file ...............  -->
+  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
 
-<section class="cta">
-  <h2>Start Smart Farming Today</h2>
-  <p>Join the movement towards water-efficient agriculture.</p>
-  <a href="#contact" class="btn btn-light btn-lg">Get Started</a>
-</section>
+  <!--...........scroll reveal js file ............  -->
+  <script src="https://unpkg.com/scrollreveal"></script>
 
-<section id="contact" class="container py-5">
-  <h2 class="section-title text-center">Contact Us</h2>
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <form>
-        <input class="form-control mb-3" placeholder="Name">
-        <input class="form-control mb-3" placeholder="Phone">
-        <textarea class="form-control mb-3" placeholder="Message"></textarea>
-        <button class="btn btn-success w-100">Submit</button>
-      </form>
-    </div>
-  </div>
-</section>
-
-<footer class="text-center p-3">
-  <p>© 2026 ParvaSense | Smart Irrigation Technology</p>
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!--................js file ..................  -->
+  <script src="./index.js"></script>
 </body>
 </html>
