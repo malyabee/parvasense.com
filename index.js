@@ -1,69 +1,56 @@
-
 /* ================= NAVBAR ELEMENTS ================= */
 
 const menu = document.querySelector(".js-menu-items");
 const openBtn = document.querySelector(".dashicon");
 const closeBtn = document.querySelector(".xIcon");
-const links = document.querySelectorAll(".menu-items a");
+const navLinks = document.querySelectorAll(".js-menu-items a"); // ✅ fixed
 const header = document.querySelector(".js-navbar");
-
-
-/* ================= SAFETY CHECK ================= */
 
 if (menu && openBtn && closeBtn) {
 
-
-/* ================= OPEN MENU ================= */
-
-function openMenu() {
-  menu.classList.add("active");
-
-  openBtn.style.display = "none";
-  closeBtn.style.display = "block";
-}
-
-
-/* ================= CLOSE MENU ================= */
-
-function closeMenu() {
-  menu.classList.remove("active");
-
-  openBtn.style.display = "block";
-  closeBtn.style.display = "none";
-}
-
-
-/* ================= EVENTS ================= */
-
-openBtn.addEventListener("click", openMenu);
-closeBtn.addEventListener("click", closeMenu);
-
-links.forEach(link => {
-  link.addEventListener("click", closeMenu);
-});
-
-
-/* ================= RESIZE FIX ================= */
-
-function handleResize() {
-  if (window.innerWidth > 768) {
-    menu.classList.remove("active");
-
+  function openMenu() {
+    menu.classList.add("active");
     openBtn.style.display = "none";
-    closeBtn.style.display = "none";
-  } else {
-    openBtn.style.display = "block";
-    closeBtn.style.display = "none";
+    closeBtn.style.display = "block";
   }
-}
 
-window.addEventListener("resize", handleResize);
-window.addEventListener("load", handleResize);
+  function closeMenu() {
+    menu.classList.remove("active");
+    if (window.innerWidth <= 768) {
+      openBtn.style.display = "block";
+      closeBtn.style.display = "none";
+    } else {
+      openBtn.style.display = "";
+      closeBtn.style.display = "";
+    }
+  }
 
+  openBtn.addEventListener("click", openMenu);
+  closeBtn.addEventListener("click", closeMenu);
+
+  navLinks.forEach(link => {
+    link.addEventListener("click", closeMenu);
+  });
+
+  function handleResize() {
+    if (window.innerWidth > 768) {
+      menu.classList.remove("active");
+      openBtn.style.display = "";
+      closeBtn.style.display = "";
+    } else {
+      openBtn.style.display = "block";
+      closeBtn.style.display = "none";
+    }
+  }
+
+  window.addEventListener("resize", handleResize);
+  window.addEventListener("load", handleResize);
+
+} // end safety check
 
 /* ================= SCROLL SPY + STICKY NAV ================= */
 
-const sections = document.querySelectorAll("section");
+const sections = document.querySelectorAll("section[id]");
 
 function handleScroll() {
   let current = "";
@@ -71,18 +58,15 @@ function handleScroll() {
 
   sections.forEach(section => {
     const top = section.offsetTop - 80;
-    const bottom = top + section.offsetHeight;
-
-    if (scrollY >= top && scrollY < bottom) {
+    if (scrollY >= top) {
       current = section.getAttribute("id");
     }
   });
 
-  links.forEach(link => {
+  navLinks.forEach(link => {          // ✅ navLinks not links
     link.classList.remove("active");
-
     const href = link.getAttribute("href");
-
+    if (!href.startsWith("#")) return;
     if (current && href === "#" + current) {
       link.classList.add("active");
     }
@@ -92,9 +76,6 @@ function handleScroll() {
     header.classList.toggle("sticky", scrollY > 100);
   }
 }
-
-
-/* ================= OPTIMIZED SCROLL ================= */
 
 let ticking = false;
 
@@ -108,9 +89,6 @@ window.addEventListener("scroll", () => {
   }
 });
 
-} // end safety check
-
-
 /* ================= SCROLL REVEAL ================= */
 
 ScrollReveal({
@@ -121,15 +99,9 @@ ScrollReveal({
 });
 
 ScrollReveal().reveal('.heading, .heading-4', { origin: 'top' });
-
-ScrollReveal().reveal(
-  '.home-img, .solutions-container, .products-container',
-  { origin: 'bottom' }
-);
-
+ScrollReveal().reveal('.home-img, .solutions-container, .products-container', { origin: 'bottom' });
 ScrollReveal().reveal('.about-img', { origin: 'left' });
 ScrollReveal().reveal('.about-content', { origin: 'right' });
-
 
 /* ================= FORM VALIDATION ================= */
 
