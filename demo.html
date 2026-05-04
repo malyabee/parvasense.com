@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ParvaSense</title>
+<link rel="icon" href="./favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<link rel="manifest" href="./site.webmanifest">
+
+<link rel="stylesheet" href ="./style.css">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #2e7d32;
+  --dark-green: #1b5e20;
+  --light-green: #66bb6a;
+  --bg: #e8f5e9;
+  --panel: #ffffff;
+  --border: #c8e6c9;
+  --text: #1b3c1b;
+}
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); font-family: 'Exo 2', sans-serif; color: var(--text); min-height: 100vh; overflow-x: hidden; }
+
+  .scene {
+    position: relative; width: 100%; min-height: 100vh;
+   background: linear-gradient(
+    to bottom,
+    #87ceeb 0%,
+    #b3e5fc 25%,
+    #a5d6a7 55%,
+    #66bb6a 75%,
+    #388e3c 100%
+    );
+    overflow: hidden; display: flex; flex-direction: column; align-items: center; padding-bottom: 40px;
+    padding-top: 64px;
+  }
+
+  .stars { position: absolute; top: 0; left: 0; width: 100%; height: 50%; pointer-events: none; }
+  .star { position: absolute; background: white; border-radius: 50%; animation: twinkle 2s infinite alternate; }
+  @keyframes twinkle { from{opacity:0.2;transform:scale(1)} to{opacity:1;transform:scale(1.4)} }
+
+  .field { position: absolute; bottom: 0; left: 0; right: 0; height: 42%; background: repeating-linear-gradient(90deg,#0e3d1f 0px,#0e3d1f 30px,#0a2a13 30px,#0a2a13 60px); opacity: 0.5; }
+
+  .crops { position: absolute; bottom: 0; left: 0; right: 0; height: 38%; display: flex; align-items: flex-end; justify-content: space-around; padding: 0 30px; pointer-events: none; }
+  .crop { width: 7px; height: 55px; background: linear-gradient(to top, #2e7d32, #66bb6a); border-radius: 4px 4px 0 0; position: relative; animation: sway 3s ease-in-out infinite; }
+  .crop:nth-child(2n){animation-delay:-0.5s;height:45px}
+  .crop:nth-child(3n){animation-delay:-1s;height:65px}
+  .crop:nth-child(4n){animation-delay:-1.5s;height:40px}
+  .crop::before,.crop::after { content:''; position:absolute; background:linear-gradient(to right,#1db954,#4ade80); border-radius:50%; width:20px; height:9px; }
+  .crop::before{top:10px;left:-7px;transform:rotate(-20deg)}
+  .crop::after{top:22px;right:-7px;transform:rotate(20deg)}
+  @keyframes sway { 0%,100%{transform:rotate(-2deg)} 50%{transform:rotate(2deg)} }
+
+  .header { width:100%; max-width:1140px; padding:16px 20px 0; display:flex; align-items:center; justify-content:flex-end; z-index:10; }
+
+  .ui { position:relative; z-index:10; width:100%; max-width:1140px; padding:20px; display:grid; grid-template-columns:260px 1fr 220px; gap:20px; align-items:start; margin-top:16px; }
+
+  .panel {background: #ffffff; border:1px solid var(--border); border-radius:16px; backdrop-filter:blur(14px); box-shadow: 0 4px 20px rgba(0,0,0,0.1),inset 0 1px 0 rgba(255,255,255,0.04); }
+
+  /* LEFT */
+  .controller { padding:24px; }
+  .ctrl-title { font-family:'Orbitron',monospace; font-size:10px; letter-spacing:3px; color:var(--green); text-transform:uppercase; margin-bottom:18px; display:flex; align-items:center; gap:8px; }
+  .ctrl-title::before { content:''; width:6px; height:6px; background:var(--green); border-radius:50%; box-shadow:0 0 8px var(--green); animation:blink 1s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+  .wifi-wrap { display:flex; justify-content:center; margin-bottom:14px; }
+  .wifi-wrap svg { width:42px; height:32px; }
+  .warc { animation:wifiAnim 1.5s ease-in-out infinite; opacity:0; fill:none; stroke:#1db954; stroke-linecap:round; stroke-width:2.4; }
+  .warc:nth-child(1){animation-delay:0s} .warc:nth-child(2){animation-delay:0.3s} .warc:nth-child(3){animation-delay:0.6s}
+  @keyframes wifiAnim { 0%{opacity:0} 30%{opacity:1} 100%{opacity:0} }
+
+  .status-list { display:flex; flex-direction:column; gap:13px; margin-bottom:22px; }
+  .status-item { display:flex; align-items:center; gap:12px; font-size:13px; font-weight:600; letter-spacing:1px; }
+  .led { width:12px; height:12px; border-radius:50%; background:#1a1a1a; border:1px solid #333; transition:all 0.4s; flex-shrink:0; }
+  .led.on { background:var(--green); box-shadow:0 0 10px var(--green),0 0 20px rgba(29,185,84,0.4); border-color:var(--light-green); }
+  .led.pulse.on { animation:ledPulse 1.5s ease-in-out infinite; }
+  @keyframes ledPulse { 0%,100%{box-shadow:0 0 10px var(--green),0 0 20px rgba(29,185,84,0.4)} 50%{box-shadow:0 0 20px var(--green),0 0 40px rgba(29,185,84,0.7)} }
+
+  .big-btn-wrap { display:flex; justify-content:center; }
+  .big-btn { width:88px; height:88px; border-radius:50%; border:none; cursor:pointer; font-family:'Orbitron',monospace; font-size:16px; font-weight:900; color:#fff; background:radial-gradient(circle at 35% 35%,#2ecc71,#0e6b2e); box-shadow:0 0 0 4px rgba(29,185,84,0.2),0 0 20px rgba(29,185,84,0.4),0 8px 24px rgba(0,0,0,0.5),inset 0 2px 4px rgba(255,255,255,0.2); transition:all 0.3s; }
+  .big-btn.off { background:radial-gradient(circle at 35% 35%,#666,#222); box-shadow:0 0 0 4px rgba(100,100,100,0.2),0 8px 24px rgba(0,0,0,0.5); }
+  .big-btn:active { transform:scale(0.95); }
+  .big-btn.on { animation:btnGlow 2s ease-in-out infinite; }
+  @keyframes btnGlow {
+    0%,100%{box-shadow:0 0 0 4px rgba(29,185,84,0.2),0 0 20px rgba(29,185,84,0.4),0 8px 24px rgba(0,0,0,0.5)}
+    50%{box-shadow:0 0 0 8px rgba(29,185,84,0.3),0 0 40px rgba(29,185,84,0.7),0 8px 24px rgba(0,0,0,0.5)}
+  }
+
+  .motor-row { display:flex; align-items:center; gap:12px; margin-top:18px; padding-top:14px; border-top:1px solid var(--border); }
+  .motor-icon { width:48px; height:48px; border-radius:50%; background:#111; border:2px solid #333; display:flex; align-items:center; justify-content:center; font-size:20px;  color: #66bb6a; transition:all 0.4s; }
+  .motor-icon.spin { border-color:var(--green); box-shadow:0 0 18px rgba(29,185,84,0.4); animation:motorSpin 1.8s linear infinite; }
+  @keyframes motorSpin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+  .motor-lbl { font-family:'Orbitron',monospace; font-size:8px; letter-spacing:2px; color:#555; }
+  .motor-val { font-family:'Orbitron',monospace; font-size:18px; font-weight:900; color:#333; transition:all 0.4s; }
+  .motor-val.on { color:var(--green); text-shadow:0 0 10px rgba(29,185,84,0.6); }
+
+  /* CENTER */
+  .field-panel { padding:20px; }
+  .field-title { font-family:'Orbitron',monospace; font-size:9px; letter-spacing:3px; color:var(--green); margin-bottom:14px; text-align:center; }
+  .sprinklers { display:flex; justify-content:space-around; align-items:flex-end; height:200px; position:relative; padding-bottom:8px; }
+  .sig-svg { position:absolute; top:-24px; left:0; width:100%; height:40px; pointer-events:none; }
+  .sig-arc { fill:none; stroke:rgba(29,185,84,0.55); stroke-width:1.2; stroke-dasharray:7 5; animation:sigFlow 2s linear infinite; }
+  @keyframes sigFlow { from{stroke-dashoffset:0} to{stroke-dashoffset:-48} }
+  .sprinkler-unit { display:flex; flex-direction:column; align-items:center; gap:3px;}
+  .spray-svg { width:80px; height:110px; overflow:visible; }
+  .water-arc { fill:none; stroke:#29b6f6; stroke-width:1.8; stroke-linecap:round; stroke-dasharray:90; stroke-dashoffset:90; animation:arcSpray 1.3s ease-out infinite; opacity:0; }
+  .water-drop {fill:#4fc3f7; animation:dropFall 1.2s ease-in infinite; opacity:0; }
+  @keyframes arcSpray { 0%{opacity:0;stroke-dashoffset:90} 25%{opacity:0.9} 80%{opacity:0.5} 100%{opacity:0;stroke-dashoffset:0} }
+  @keyframes dropFall { 0%{opacity:0;transform:translateY(0)} 20%{opacity:1} 80%{opacity:0.5} 100%{opacity:0;transform:translateY(14px)} }
+  .s-head { width:16px; height:8px; background:#777; border-radius:4px 4px 0 0; }
+  .s-pole { width:4px; height:38px; background:linear-gradient(to bottom,#888,#444); border-radius:2px; }
+  .on-badge { font-family:'Orbitron',monospace; font-size:9px; font-weight:700; padding:2px 7px; border-radius:10px; letter-spacing:1px; background:rgba(29,185,84,0.15); color:var(--green); border:1px solid var(--green); opacity:0; transition:opacity 0.4s; }
+  .on-badge.active { opacity:1; box-shadow:0 0 8px rgba(29,185,84,0.5); animation:badgePulse 1.5s ease-in-out infinite; }
+  @keyframes badgePulse { 0%,100%{box-shadow:0 0 8px rgba(29,185,84,0.5)} 50%{box-shadow:0 0 16px rgba(29,185,84,0.9)} }
+
+  .stats-row { display:flex; gap:16px; align-items:center; margin-top:18px; padding-top:14px; border-top:1px solid var(--border); }
+  .stat { flex:1; }
+  .stat-lbl { font-family:'Orbitron',monospace; font-size:8px; letter-spacing:2px; color:#555; margin-bottom:4px; }
+  .stat-val { font-family:'Orbitron',monospace; font-size:15px; font-weight:700; color:#333; transition:all 0.4s; }
+  .stat-val.on { color:var(--green); text-shadow:0 0 8px rgba(29,185,84,0.5); }
+  .flow-bar { height:4px; background:rgba(255,255,255,0.08); border-radius:2px; margin-top:6px; overflow:hidden; }
+  .flow-fill { height:100%; background:linear-gradient(to right,var(--dark-green),var(--green)); border-radius:2px; width:0; transition:width 1s ease; }
+
+  /* RIGHT */
+  .phone-panel { padding:16px; }
+  .phone-frame { background:#f0f4f0; border-radius:28px; padding:18px 14px; border:3px solid #1a1a1a; box-shadow:inset 0 0 20px rgba(0,0,0,0.12),0 10px 40px rgba(0,0,0,0.5); }
+  .phone-notch { width:55px; height:14px; background:#111; border-radius:0 0 10px 10px; margin:0 auto 14px; }
+  .app-title { font-family:'Orbitron',monospace; font-size:9px; letter-spacing:2px; color:var(--dark-green); text-align:center; margin-bottom:14px; display:flex; align-items:center; justify-content:center; gap:5px; }
+  .phone-btn-wrap { display:flex; justify-content:center; margin-bottom:18px; }
+  .phone-btn { width:78px; height:78px; border-radius:50%; border:none; cursor:pointer; font-family:'Orbitron',monospace; font-size:14px; font-weight:900; color:#fff; background:radial-gradient(circle at 35% 35%,#2ecc71,#0e6b2e); box-shadow:0 6px 18px rgba(0,0,0,0.3),0 0 0 4px rgba(29,185,84,0.3),inset 0 2px 4px rgba(255,255,255,0.25); transition:all 0.3s; position:relative; }
+  .phone-btn.off { background:radial-gradient(circle at 35% 35%,#bbb,#888); box-shadow:0 6px 18px rgba(0,0,0,0.3); }
+  .phone-btn:active { transform:scale(0.93); }
+  .phone-btn.on { animation:phoneBtnGlow 2s ease-in-out infinite; }
+  @keyframes phoneBtnGlow { 0%,100%{box-shadow:0 6px 18px rgba(0,0,0,0.3),0 0 0 4px rgba(29,185,84,0.3)} 50%{box-shadow:0 6px 18px rgba(0,0,0,0.3),0 0 0 8px rgba(29,185,84,0.5),0 0 28px rgba(29,185,84,0.4)} }
+  .phone-btn.on::after { content:''; position:absolute; inset:-4px; border-radius:50%; border:2px solid rgba(29,185,84,0.4); animation:ripple 1.6s ease-out infinite; opacity:0; }
+  @keyframes ripple { 0%{transform:scale(0.9);opacity:0.7} 100%{transform:scale(1.5);opacity:0} }
+  .p-stat { background:rgba(0,0,0,0.05); border-radius:10px; padding:10px 12px; margin-bottom:10px; }
+  .p-lbl { font-size:9px; letter-spacing:1px; color:#888; text-transform:uppercase; margin-bottom:4px; }
+  .p-val { font-family:'Orbitron',monospace; font-size:15px; font-weight:700; color:#aaa; transition:all 0.4s; }
+  .p-val.on { color:#0e6b2e; }
+
+  /* ── MOTOR BLOCK ── */
+.motor-block {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  backdrop-filter: blur(14px);
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1),
+              inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+.motor-block-title {
+  color: var(--green);
+}
+
+.m-stat-lbl {
+  color: #666;
+}
+
+.m-stat-val {
+  color: var(--text);
+}
+
+.m-stat-val.on {
+  color: var(--green);
+}
+
+  .big-motor-svg { width:170px; height:124px; flex-shrink:0; }
+
+  .pipe-water-flow { stroke-dasharray:14 7; animation:pipeWaterFlow 0.7s linear infinite; }
+  @keyframes pipeWaterFlow { from{stroke-dashoffset:0} to{stroke-dashoffset:-42} }
+  .big-rotor { transform-origin:54px 60px; }
+  .big-rotor.spin { animation:bigRotorSpin 1.0s linear infinite; }
+  @keyframes bigRotorSpin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+  .impeller-g { transform-origin:170px 66px; }
+  .impeller-g.spin { animation:bigRotorSpin 1.0s linear infinite; }
+  .motor-body-group.vibrate { animation:motorVibrate 0.15s ease-in-out infinite alternate; }
+  @keyframes motorVibrate { from{transform:translateX(0)} to{transform:translateX(0.8px)} }
+  .motor-aura { opacity:0; transition:opacity 0.5s; }
+  .motor-aura.on { opacity:1; animation:motorGlowPulse 2s ease-in-out infinite; }
+  @keyframes motorGlowPulse { 0%,100%{opacity:0.5} 50%{opacity:1} }
+  .bubble { fill:rgba(110,231,250,0.7); animation:bubbleRise 1.4s ease-out infinite; opacity:0; }
+  @keyframes bubbleRise { 0%{opacity:0;transform:translateY(0) scale(0.5)} 20%{opacity:0.9} 80%{opacity:0.3} 100%{opacity:0;transform:translateY(-22px) scale(1.2)} }
+
+  .motor-stats { display:flex; flex-direction:column; gap:12px; flex:1; }
+  .m-stat-row { display:flex; flex-direction:column; }
+  .m-stat-lbl { font-family:'Orbitron',monospace; font-size:8px; letter-spacing:2px; color:#445; margin-bottom:2px; }
+  .m-stat-val { font-family:'Orbitron',monospace; font-size:16px; font-weight:900; color:#333; transition:all 0.4s; }
+  .m-stat-val.on { color:var(--green); text-shadow:0 0 10px rgba(29,185,84,0.6); }
+
+  .motor-glow-ring-big { position:relative; }
+  .motor-glow-ring-big::after {
+    content:''; position:absolute; inset:-6px; border-radius:50%;
+    border:2px solid rgba(29,185,84,0); pointer-events:none; transition:all 0.4s;
+  }
+  .motor-glow-ring-big.on::after {
+    border-color:rgba(29,185,84,0.5);
+    box-shadow:0 0 18px rgba(29,185,84,0.4);
+    animation:ringPulseBig 1.8s ease-in-out infinite;
+  }
+  @keyframes ringPulseBig { 0%,100%{box-shadow:0 0 12px rgba(29,185,84,0.4)} 50%{box-shadow:0 0 28px rgba(29,185,84,0.8)} }
+
+  @media(max-width:768px){
+  .ui{grid-template-columns:1fr}
+  .motor-block{flex-direction:column}
+}
+
+@media (max-width: 380px) {
+  .scene { padding-top: 56px; }
+  .ui {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 10px;
+  }
+  .controller { padding: 14px; }
+  .big-btn { width: 60px; height: 60px; font-size: 11px; }
+  .sprinklers { height: 130px; }
+  .spray-svg { width: 55px; height: 45px; }
+  .motor-block { flex-direction: column; padding: 12px; gap: 12px; }
+  .big-motor-svg { width: 120px; height: 90px; }
+  .phone-btn { width: 55px; height: 55px; font-size: 11px; }
+}
+
+@media (min-width: 381px) and (max-width: 430px) {
+  .scene { padding-top: 60px; }
+  .ui { grid-template-columns: 1fr; gap: 12px; padding: 12px; }
+  .big-btn { width: 70px; height: 70px; }
+  .sprinklers { height: 160px; }
+  .spray-svg { width: 65px; height: 75px; }
+  .motor-block { flex-direction: column; padding: 16px; }
+  .big-motor-svg { width: 140px; height: 105px; }
+  .phone-btn { width: 65px; height: 65px; }
+}
+</style>
+</head>
+<body>
+<header class="navbar js-navbar">
+  <div class="logo">
+      <img src="./images/logo.png">
+  </div>
+  <button class="dashicon">&#9776;</button>
+  <button class="xIcon js-hide">&#9747;</button>
+  <nav class="menu-items js-menu-items">
+      <ul>
+          <li><a href="index.html" class="active">Home</a></li>
+          <li><a href="index.html#About">About</a></li>
+          <li><a href="index.html#Solutions">Solutions</a></li>
+          <li><a href="index.html#products">Products</a></li>
+          <li><a href="contact.html">Contact</a></li>
+      </ul>
+  </nav>
+</header>
+
+<div class="scene">
+  <div class="stars" id="stars"></div>
+  <div class="field"></div>
+  <div class="crops" id="crops"></div>
+
+  <div class="header"></div>
+
+  <div class="ui">
+    <!-- LEFT -->
+    <div class="panel controller">
+      <div class="wifi-wrap">
+        <svg viewBox="0 0 42 32" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="21" cy="28" r="3" fill="#1db954"/>
+          <path class="warc" d="M13 21 Q21 15 29 21"/>
+          <path class="warc" d="M6 14 Q21 5 36 14"/>
+          <path class="warc" d="M1 7 Q21 -4 41 7"/>
+        </svg>
+      </div>
+      <div class="ctrl-title">Master Controller</div>
+      <div class="status-list">
+        <div class="status-item"><div class="led on" id="led-pwr"></div> POWER</div>
+        <div class="status-item"><div class="led on pulse" id="led-mot"></div> MOTOR</div>
+        <div class="status-item"><div class="led on" id="led-sta"></div> STATUS</div>
+      </div>
+      <div class="big-btn-wrap">
+        <button class="big-btn on" id="mainBtn" onclick="toggleSystem()">ON</button>
+      </div>
+      <div class="motor-row">
+        <div class="motor-icon spin" id="mIcon">⚙</div>
+        <div>
+          <div class="motor-lbl">MOTOR STATUS</div>
+          <div class="motor-val on" id="mVal">ON</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CENTER -->
+    <div class="panel field-panel">
+      <div class="field-title">◆ FIELD OVERVIEW — ZONE A ◆</div>
+      <div class="sprinklers" id="sprinklers">
+        <svg class="sig-svg" viewBox="0 0 600 40" preserveAspectRatio="none">
+          <path class="sig-arc" d="M60,30 C180,4 320,4 440,30 C510,48 560,10 580,20"/>
+        </svg>
+      </div>
+      <div class="stats-row">
+        <div class="stat"><div class="stat-lbl">PRESSURE</div><div class="stat-val on" id="statPres">2.4 BAR</div></div>
+        <div class="stat" style="flex:2"><div class="stat-lbl">FLOW RATE</div><div class="flow-bar"><div class="flow-fill" id="flowFill" style="width:75%"></div></div></div>
+        <div class="stat"><div class="stat-lbl">ZONES</div><div class="stat-val on" id="statZones">4 / 4</div></div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="panel phone-panel">
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="app-title">🌿APP CONTROL</div>
+        <div class="phone-btn-wrap">
+          <button class="phone-btn on" id="phoneBtn" onclick="toggleSystem()">ON</button>
+        </div>
+        <div class="p-stat"><div class="p-lbl">Motor Status</div><div class="p-val on" id="pMotor">ON</div></div>
+        <div class="p-stat">
+          <div class="p-lbl">Sprinkler Status</div>
+          <div class="p-val on" id="pSpray">ON</div>
+          <div class="flow-bar" style="margin-top:8px"><div class="flow-fill" id="pFlow" style="width:75%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MOTOR BLOCK ── -->
+  <div class="motor-overlay">
+    <div class="motor-block">
+      <div>
+        <div class="motor-block-title">⚡ PUMP MOTOR UNIT</div>
+        <svg class="big-motor-svg" viewBox="0 0 220 130" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="mbg" cx="40%" cy="35%">
+              <stop offset="0%" stop-color="#3a6b45"/>
+              <stop offset="100%" stop-color="#0b1a12"/>
+            </radialGradient>
+            <radialGradient id="rg" cx="40%" cy="40%">
+              <stop offset="0%" stop-color="#4ade80"/>
+              <stop offset="100%" stop-color="#0e6b2e"/>
+            </radialGradient>
+            <filter id="mglow">
+              <feGaussianBlur stdDeviation="3" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <filter id="heatDistort">
+                <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="2" result="turb"/>
+                <feDisplacementMap in="SourceGraphic" in2="turb" scale="2"/>
+            </filter>
+          </defs>
+
+          <ellipse class="motor-aura on" id="motorAura" cx="68" cy="68" rx="60" ry="52" fill="rgba(29,185,84,0.08)" filter="url(#mglow)"/>
+
+        <g class="motor-body-group vibrate" id="motorBodyGroup" filter="url(#heatDistort)">
+        <rect x="10" y="30" width="110" height="72" rx="14" fill="url(#mbg)" stroke="#4a7c59" stroke-width="2.2"/>
+        <rect x="14" y="33" width="100" height="10" rx="6" fill="rgba(255,255,255,0.12)"/>
+        <g stroke="#2f5d3a" stroke-width="2">
+            <line x1="28" y1="32" x2="28" y2="100"/>
+            <line x1="38" y1="32" x2="38" y2="100"/>
+            <line x1="48" y1="32" x2="48" y2="100"/>
+            <line x1="58" y1="32" x2="58" y2="100"/>
+            <line x1="68" y1="32" x2="68" y2="100"/>
+            <line x1="78" y1="32" x2="78" y2="100"/>
+            <line x1="88" y1="32" x2="88" y2="100"/>
+        </g>
+        <rect x="10" y="30" width="20" height="72" rx="10" fill="#1f3d2b" stroke="#66bb6a" stroke-width="1.5"/>
+        <circle cx="20" cy="42" r="3.2" fill="#0f1f14" stroke="#66bb6a"/>
+        <circle cx="20" cy="90" r="3.2" fill="#0f1f14" stroke="#66bb6a"/>
+        <circle cx="112" cy="42" r="3.2" fill="#0f1f14" stroke="#66bb6a"/>
+        <circle cx="112" cy="90" r="3.2" fill="#0f1f14" stroke="#66bb6a"/>
+        <rect x="42" y="54" width="54" height="24" rx="4" fill="#0b1a12" stroke="#66bb6a" stroke-width="0.8"/>
+        <text x="69" y="64" text-anchor="middle" font-family="Orbitron,monospace" font-size="6" fill="#00ff88" letter-spacing="2">PARVA</text>
+        <text x="69" y="73" text-anchor="middle" font-family="Orbitron,monospace" font-size="5" fill="#a7f3d0">MOTOR-3X</text>
+        <circle cx="50" cy="44" r="3.2" fill="#00ff88">
+            <animate attributeName="opacity" values="1;0.3;1" dur="1s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="50" cy="44" r="7" fill="none" stroke="#00ff88" stroke-width="1" opacity="0.4">
+            <animate attributeName="r" values="5;9;5" dur="1s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.5;0;0.5" dur="1s" repeatCount="indefinite"/>
+        </circle>
+        </g>
+          <circle cx="55" cy="66" r="22" fill="#080f09" stroke="#1a3020" stroke-width="2"/>
+          <g class="big-rotor spin" id="bigRotor">
+            <ellipse cx="55" cy="66" rx="17" ry="6" fill="url(#rg)" opacity="0.9"/>
+            <ellipse cx="55" cy="66" rx="6" ry="17" fill="url(#rg)" opacity="0.9"/>
+            <ellipse cx="55" cy="66" rx="13" ry="5" fill="#4ade80" opacity="0.5" transform="rotate(45 55 66)"/>
+            <ellipse cx="55" cy="66" rx="5" ry="13" fill="#4ade80" opacity="0.5" transform="rotate(45 55 66)"/>
+            <circle cx="55" cy="66" r="5" fill="#060e07" stroke="#1db954" stroke-width="1.5"/>
+            <circle cx="55" cy="66" r="2" fill="#1db954"><animate attributeName="opacity" values="1;0.4;1" dur="0.6s" repeatCount="indefinite"/></circle>
+          </g>
+          <rect x="120" y="62" width="22" height="8" rx="3" fill="#333" stroke="#555" stroke-width="1"/>
+          <rect x="138" y="60" width="6" height="12" rx="2" fill="#222" stroke="#444" stroke-width="0.8"/>
+          <ellipse cx="170" cy="66" rx="30" ry="36" fill="#0d1a10" stroke="#1a3a1f" stroke-width="2"/>
+          <ellipse cx="170" cy="66" rx="24" ry="30" fill="#060e07" stroke="#122a14" stroke-width="1"/>
+          <g class="impeller-g spin" id="impeller">
+            <ellipse cx="170" cy="66" rx="18" ry="6" fill="#0e6b2e" opacity="0.8"/>
+            <ellipse cx="170" cy="66" rx="6" ry="18" fill="#0e6b2e" opacity="0.8"/>
+            <ellipse cx="170" cy="66" rx="13" ry="5" fill="#1db954" opacity="0.5" transform="rotate(45 170 66)"/>
+            <ellipse cx="170" cy="66" rx="5" ry="13" fill="#1db954" opacity="0.5" transform="rotate(45 170 66)"/>
+            <circle cx="170" cy="66" r="5" fill="#050c06" stroke="#0e6b2e" stroke-width="1.5"/>
+          </g>
+          <rect x="198" y="60" width="22" height="12" rx="4" fill="#1a2a1f" stroke="#2a4a2f" stroke-width="1.5"/>
+          <line class="pipe-water-flow" id="pipeFlow1" x1="200" y1="66" x2="218" y2="66" stroke="#6ee7fa" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+          <circle class="bubble" cx="210" cy="58" r="3" style="animation-delay:0s"/>
+          <circle class="bubble" cx="216" cy="54" r="2" style="animation-delay:0.4s"/>
+          <circle class="bubble" cx="204" cy="56" r="2.5" style="animation-delay:0.7s"/>
+          <rect x="158" y="0" width="12" height="34" rx="4" fill="#1a2a1f" stroke="#2a4a2f" stroke-width="1.5"/>
+          <line class="pipe-water-flow" x1="164" y1="4" x2="164" y2="30" stroke="#6ee7fa" stroke-width="3" stroke-linecap="round" opacity="0.6" style="animation-direction:reverse"/>
+          <rect x="14" y="100" width="106" height="10" rx="3" fill="#0a1209" stroke="#1a2a1f" stroke-width="1"/>
+          <rect x="22" y="108" width="14" height="16" rx="2" fill="#0a1209" stroke="#1a2a1f" stroke-width="1"/>
+          <rect x="96" y="108" width="14" height="16" rx="2" fill="#0a1209" stroke="#1a2a1f" stroke-width="1"/>
+          <rect x="0" y="122" width="140" height="6" rx="2" fill="#060e07" stroke="#111" stroke-width="1"/>
+        </svg>
+      </div>
+
+      <div class="motor-stats">
+        <div class="m-stat-row">
+          <div class="m-stat-lbl">MOTOR STATUS</div>
+          <div class="m-stat-val on" id="bigMotorStatus">ON</div>
+        </div>
+        <div class="m-stat-row">
+          <div class="m-stat-lbl">RPM</div>
+          <div class="m-stat-val on" id="rpmVal">1450</div>
+        </div>
+        <div class="m-stat-row">
+          <div class="m-stat-lbl">CURRENT</div>
+          <div class="m-stat-val on" id="currentVal">4.2 A</div>
+        </div>
+        <div class="m-stat-row">
+          <div class="m-stat-lbl">TEMP</div>
+          <div class="m-stat-val on" id="tempVal">38°C</div>
+        </div>
+        <div class="m-stat-row">
+          <div class="m-stat-lbl">FLOW OUT</div>
+          <div class="flow-bar" style="width:140px;margin-top:4px"><div class="flow-fill" id="motorFlow" style="width:78%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Stars
+const starsEl = document.getElementById('stars');
+for (let i = 0; i < 70; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  const sz = Math.random()*2+1;
+  Object.assign(s.style,{width:sz+'px',height:sz+'px',left:Math.random()*100+'%',top:Math.random()*100+'%',animationDelay:Math.random()*3+'s',animationDuration:(1.5+Math.random()*2)+'s'});
+  starsEl.appendChild(s);
+}
+
+// Crops
+const cropsEl = document.getElementById('crops');
+for (let i = 0; i < 55; i++) cropsEl.appendChild(Object.assign(document.createElement('div'),{className:'crop'}));
+
+// Build sprinklers
+const box = document.getElementById('sprinklers');
+const N = 4;
+for (let i = 0; i < N; i++) {
+  const unit = document.createElement('div'); unit.className='sprinkler-unit';
+  const badge = document.createElement('div'); badge.className='on-badge active'; badge.id='badge-'+i; badge.textContent='ON';
+  const ns='http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(ns,'svg'); svg.setAttribute('viewBox','0 0 80 110'); svg.setAttribute('class','spray-svg'); svg.id='svg-'+i;
+  [{d:'M40,100 Q14,68 4,38',del:'0s'},{d:'M40,100 Q18,56 14,20',del:'0.2s'},{d:'M40,100 Q30,48 27,8',del:'0.4s'},{d:'M40,100 Q50,48 53,8',del:'0.1s'},{d:'M40,100 Q62,56 66,20',del:'0.3s'},{d:'M40,100 Q66,68 76,38',del:'0.5s'}].forEach(a=>{
+    const p=document.createElementNS(ns,'path'); p.setAttribute('d',a.d); p.setAttribute('class','water-arc'); p.style.animationDelay=a.del; p.style.animationDuration=(1.1+Math.random()*0.4)+'s'; svg.appendChild(p);
+  });
+  [[6,36],[15,20],[28,6],[52,6],[65,20],[74,36]].forEach(([x,y],j)=>{
+    const el=document.createElementNS(ns,'ellipse'); el.setAttribute('cx',x); el.setAttribute('cy',y); el.setAttribute('rx','2.2'); el.setAttribute('ry','3.2'); el.setAttribute('class','water-drop'); el.style.animationDelay=(j*0.18)+'s'; el.style.animationDuration=(1.0+Math.random()*0.4)+'s'; svg.appendChild(el);
+  });
+  const head=document.createElement('div'); head.className='s-head';
+  const pole=document.createElement('div'); pole.className='s-pole';
+  unit.append(badge,svg,head,pole); box.appendChild(unit);
+}
+
+// RPM flicker
+let rpmInterval;
+function startRPM() { rpmInterval = setInterval(()=>{ document.getElementById('rpmVal').textContent=(1450+Math.floor(Math.random()*20-10)); },500); }
+function stopRPM() { clearInterval(rpmInterval); document.getElementById('rpmVal').textContent='0'; }
+startRPM();
+
+// Toggle
+let isOn = true;
+function setEl(id,cls,txt) { const el=document.getElementById(id); if(cls!==null)el.className=cls; if(txt!==null)el.textContent=txt; }
+
+function toggleSystem() {
+  isOn = !isOn; const on = isOn;
+
+  setEl('mainBtn',`big-btn ${on?'on':'off'}`,on?'ON':'OFF');
+  setEl('phoneBtn',`phone-btn ${on?'on':'off'}`,on?'ON':'OFF');
+  document.getElementById('led-mot').className='led'+(on?' on pulse':'');
+  document.getElementById('led-sta').className='led'+(on?' on':'');
+  setEl('mIcon',`motor-icon ${on?'spin':''}`,null);
+  setEl('mVal',`motor-val ${on?'on':''}`,on?'ON':'OFF');
+  setEl('pMotor',`p-val ${on?'on':''}`,on?'ON':'OFF');
+  setEl('pSpray',`p-val ${on?'on':''}`,on?'ON':'OFF');
+  setEl('statPres',`stat-val ${on?'on':''}`,on?'2.4 BAR':'0.0 BAR');
+  setEl('statZones',`stat-val ${on?'on':''}`,on?'4 / 4':'0 / 4');
+  document.getElementById('flowFill').style.width=on?'75%':'0%';
+  document.getElementById('pFlow').style.width=on?'75%':'0%';
+
+  document.getElementById('bigRotor').className=`big-rotor ${on?'spin':''}`;
+  document.getElementById('bigRotor').style.animationPlayState=on?'running':'paused';
+  document.getElementById('impeller').className=`impeller-g ${on?'spin':''}`;
+  document.getElementById('impeller').style.animationPlayState=on?'running':'paused';
+  document.getElementById('motorBodyGroup').className=`motor-body-group ${on?'vibrate':''}`;
+  document.getElementById('motorAura').className=`motor-aura ${on?'on':''}`;
+  setEl('bigMotorStatus',`m-stat-val ${on?'on':''}`,on?'ON':'OFF');
+  setEl('currentVal',`m-stat-val ${on?'on':''}`,on?'4.2 A':'0.0 A');
+  setEl('tempVal',`m-stat-val ${on?'on':''}`,on?'38°C':'25°C');
+  document.getElementById('motorFlow').style.width=on?'78%':'0%';
+  document.getElementById('pipeFlow1').style.animationPlayState=on?'running':'paused';
+  if(on) startRPM(); else stopRPM();
+
+  for(let i=0;i<N;i++){
+    const badge=document.getElementById('badge-'+i); badge.className=`on-badge ${on?'active':''}`; badge.textContent=on?'ON':'OFF';
+    document.getElementById('svg-'+i).querySelectorAll('.water-arc,.water-drop').forEach(el=>{ el.style.animationPlayState=on?'running':'paused'; if(!on)el.style.opacity='0'; });
+  }
+}
+</script>
+</body>
+</html>

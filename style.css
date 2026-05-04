@@ -23,7 +23,7 @@ body{
     width: 100%;
     padding: 1px 8%;
     background-color: #0B1F3A;
-    background: rgba(11, 31, 58, 0.75);
+    background: rgba(11, 31, 58, 0.79);
     backdrop-filter: blur(8px);
     display: flex;
     justify-content: space-between;
@@ -83,9 +83,9 @@ body{
 }
 
 
-.home {
+/*.home {
     background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.3)),
-                url("./images/mainbg.jpg") no-repeat center center;
+                url("./images/psbg3.png") no-repeat center center;
     background-size: cover;
     background-attachment: fixed;
     background-repeat: no-repeat;
@@ -95,6 +95,32 @@ body{
     height: 100vh;
     padding: 0 120px;
     color: #ffffff;
+}*/
+
+.home {
+    position: relative;
+
+    background:
+        linear-gradient(
+            to right,
+            rgba(25, 35, 55, 0.70) 0%,   /* neutral dark */
+            rgba(55, 50, 45, 0.50) 40%,  /* slightly warm gray */
+            rgba(70, 65, 60, 0.25) 70%,  /* soft warm tint */
+            rgba(90, 85, 80, 0.10) 100%   /* very light fade */
+        ),
+        url("./images/psbg5.jpg") no-repeat center center;
+
+    background-size: cover;
+    background-attachment: fixed;
+
+    display: flex;
+    align-items: center;
+    height: 100vh;
+    padding: 0 120px;
+
+    color: #f5f5f5;
+
+    filter: saturate(0.85) contrast(1.05) brightness(0.95);
 }
 
 .main {
