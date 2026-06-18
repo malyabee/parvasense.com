@@ -1,0 +1,765 @@
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParvaSense</title>
+    <link rel="icon" href="./favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+    <link rel="manifest" href="./site.webmanifest">
+     <link rel="stylesheet" href ="./style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --g9:#0d2b1a;--g8:#133d28;--g7:#1a5235;--g6:#1e6b41;--g5:#2e8b5a;--g4:#3aad70;--g3:#52c98a;
+  --g-light:#e8f5ec;--g-mid:#c8ead3;
+  --blue-bg:#eef4fb;--blue-txt:#1a4a8a;--blue-icon:#2e7dd1;
+  --purple-bg:#f0eeff;--purple-txt:#3b2d8a;
+  --amber-bg:#fff8e8;--amber-txt:#7a4f00;--amber-border:#f0c060;
+  --white:#fff;--bg:#f4f7f5;--border:#dde8e2;
+  --text:#1a2e23;--text2:#4a6358;--text3:#8aaa98;
+  --red:#c0392b;--shadow:0 2px 8px rgba(0,0,0,0.07);
+  /* ── CHANGE 1: navbar height token to match .logo img height:65px + 1px*2 padding in style.css ── */
+  --navbar-h:67px;
+}
+
+/* ── CHANGE 2: push all page content below the fixed .navbar from style.css ── */
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:14px;min-height:100vh;padding-top:var(--navbar-h)}
+
+/* ── HEADER ── */
+/* ── CHANGE 3: inner planner header sticks just below the fixed outer navbar ── */
+.hdr{background:var(--g9);display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:64px;position:sticky;top:var(--navbar-h);z-index:99;border-bottom:1px solid #1e3a27}
+.hdr-logo{display:flex;align-items:center;gap:14px}
+.logo-icon{background:var(--g7);border-radius:10px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.logo-divider{width:1px;height:36px;background:#2d5040}
+.hdr-title h1{font-size:18px;font-weight:700;color:#fff;line-height:1.2}
+.hdr-title p{font-size:12px;color:#7ab899;margin-top:1px}
+.hdr-badge{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:#b8dcc8;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:500;display:flex;align-items:center;gap:6px}
+.hdr-actions{display:flex;gap:8px}
+.btn-hdr{padding:8px 14px;border-radius:7px;font-size:12px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;border:none;display:flex;align-items:center;gap:6px;transition:all 0.15s}
+.btn-export{background:var(--g6);color:#fff}
+.btn-export:hover{background:var(--g5)}
+.btn-print{background:rgba(255,255,255,0.12);color:#d0e8da;border:1px solid rgba(255,255,255,0.15)}
+.btn-print:hover{background:rgba(255,255,255,0.2)}
+
+/* ── LAYOUT ── */
+.layout{display:grid;grid-template-columns:360px 1fr;min-height:calc(100vh - var(--navbar-h) - 64px)}
+@media(max-width:860px){.layout{grid-template-columns:1fr}}
+
+/* ── INPUT PANEL ── */
+.input-panel{background:var(--white);border-right:1px solid var(--border);padding:24px;overflow-y:auto}
+.inp-header{display:flex;align-items:center;gap:10px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.inp-header-icon{background:var(--g-light);border-radius:8px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.inp-header h2{font-size:14px;font-weight:700;color:var(--g7)}
+.inp-header p{font-size:11px;color:var(--text3);margin-top:1px}
+
+.form-item{margin-bottom:18px}
+.form-item label{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--text);margin-bottom:7px}
+.form-item label .lbl-icon{font-size:16px}
+.form-item label .lbl-num{background:var(--g7);color:#fff;width:20px;height:20px;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.inp-row{display:flex;gap:8px}
+.inp-row input,.inp-row select,input[type=number],select{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:'Inter',sans-serif;color:var(--text);background:#fff;outline:none;appearance:none;-webkit-appearance:none;transition:border 0.15s}
+.inp-row input:focus,.inp-row select:focus,input[type=number]:focus,select:focus{border-color:var(--g5)}
+.inp-row select{width:130px;flex:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234a6358' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 10px center}
+.inp-row input{flex:1}
+.form-hint{font-size:11px;color:var(--text3);margin-top:5px;display:flex;align-items:center;gap:4px}
+
+.divider{border:none;border-top:1px solid var(--border);margin:18px 0}
+.section-lbl{font-size:10px;font-weight:700;letter-spacing:1.2px;color:var(--text3);text-transform:uppercase;margin-bottom:14px}
+
+.calc-btn{width:100%;padding:14px;background:var(--g7);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.15s;letter-spacing:0.3px}
+.calc-btn:hover{background:var(--g6)}
+.calc-btn:active{transform:scale(0.99)}
+.calc-btn svg{width:18px;height:18px}
+
+.note-box{background:var(--g-light);border:1px solid var(--g-mid);border-radius:8px;padding:10px 12px;margin-top:12px;font-size:11px;color:var(--text2);display:flex;gap:7px;line-height:1.5}
+
+/* ── OUTPUT PANEL ── */
+.output-panel{background:var(--bg);padding:24px;overflow-y:auto}
+
+/* ── SUMMARY CARDS ── */
+.summary-bar{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.summary-bar h2{font-size:14px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:7px}
+.area-chip{background:var(--g7);color:#fff;font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600;margin-left:auto}
+
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+@media(max-width:1100px){.summary-grid{grid-template-columns:repeat(2,1fr)}}
+.sum-card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:18px 16px;display:flex;flex-direction:column;gap:8px}
+.sum-card.highlight{border-color:var(--g4)}
+.sum-card-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px}
+.ic-blue{background:var(--blue-bg)}
+.ic-green{background:var(--g-light)}
+.ic-purple{background:var(--purple-bg)}
+.ic-amber{background:var(--amber-bg)}
+.sum-card-lbl{font-size:10px;font-weight:700;color:var(--text3);letter-spacing:0.8px;text-transform:uppercase}
+.sum-card-val{font-size:30px;font-weight:800;color:var(--text);line-height:1}
+.sum-card-val.green{color:var(--g6)}
+.sum-card-val.blue{color:var(--blue-txt)}
+.sum-card-val.amber{color:var(--amber-txt)}
+.sum-card-sub{font-size:11px;color:var(--text3);font-weight:500}
+
+/* ── SPRINKLER OPTIONS ── */
+.options-bar{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.options-bar h2{font-size:14px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:7px}
+.options-info{background:var(--g-light);color:var(--g7);font-size:11px;padding:4px 12px;border-radius:20px;font-weight:600;margin-left:auto;border:1px solid var(--g-mid)}
+
+.sprinkler-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+@media(max-width:1100px){.sprinkler-grid{grid-template-columns:1fr}}
+
+.sp-card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.sp-card.opt1{border-top:3px solid var(--g5)}
+.sp-card.opt2{border-top:3px solid var(--blue-icon)}
+.sp-card.opt3{border-top:3px solid #9b59b6}
+
+.sp-card-head{padding:14px 16px 0}
+.opt-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:6px;font-size:10px;font-weight:800;letter-spacing:0.5px;margin-bottom:8px}
+.opt-badge.b1{background:var(--g7);color:#fff}
+.opt-badge.b2{background:var(--blue-icon);color:#fff}
+.opt-badge.b3{background:#9b59b6;color:#fff}
+.sp-name{font-size:14px;font-weight:700;color:var(--text);line-height:1.2}
+.sp-sub{font-size:11px;color:var(--text3);margin-top:2px;margin-bottom:10px}
+
+.sp-img-area{background:var(--bg);margin:0 16px;border-radius:10px;height:120px;display:flex;align-items:center;justify-content:center;font-size:60px;margin-bottom:0}
+
+.sp-desc{background:var(--g-light);margin:10px 16px;border-radius:8px;padding:10px 12px;font-size:11px;color:var(--text2);text-align:center;line-height:1.5}
+
+.sp-specs{padding:12px 16px;display:flex;flex-direction:column;gap:0;flex:1}
+.sp-spec-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--bg);font-size:12px}
+.sp-spec-row:last-child{border-bottom:none}
+.sp-spec-key{color:var(--text2);display:flex;align-items:center;gap:6px}
+.sp-spec-key svg{width:14px;height:14px;stroke:var(--text3)}
+.sp-spec-val{font-weight:700;color:var(--text)}
+
+.sp-card-footer{background:var(--g-light);border-top:1px solid var(--g-mid);padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.runtime-label{font-size:11px;font-weight:700;color:var(--g7);display:flex;align-items:center;gap:5px}
+.runtime-val{font-size:18px;font-weight:800;color:var(--g7)}
+.select-btn{background:var(--g7);color:#fff;border:none;border-radius:7px;padding:8px 16px;font-size:12px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:background 0.15s}
+.select-btn:hover{background:var(--g6)}
+
+/* ── FIELD LAYOUT SECTION ── */
+.field-section{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px}
+.field-section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.field-section-hdr h3{font-size:14px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:7px}
+.field-controls{display:flex;gap:8px;align-items:center}
+.field-ctrl-btn{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:11px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;color:var(--text2);transition:all 0.15s}
+.field-ctrl-btn:hover{background:var(--g-light);color:var(--g7);border-color:var(--g-mid)}
+.field-ctrl-btn.active{background:var(--g7);color:#fff;border-color:var(--g7)}
+
+.field-canvas-wrap{background:#e8f5ec;border-radius:10px;overflow:hidden;position:relative}
+.field-legend{display:flex;gap:16px;margin-top:10px;flex-wrap:wrap}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2)}
+.leg-dot{width:12px;height:12px;border-radius:50%}
+
+/* ── FORMULA + PIPE ── */
+.details-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+@media(max-width:900px){.details-grid{grid-template-columns:1fr}}
+.detail-card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:16px}
+.detail-card h4{font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.detail-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--bg);font-size:12px}
+.detail-row:last-child{border-bottom:none}
+.detail-key{color:var(--text2)}
+.detail-val{font-weight:700;color:var(--g7)}
+
+/* ── BOTTOM NOTE ── */
+.bottom-note{background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:10px;padding:12px 16px;font-size:12px;color:var(--amber-txt);display:flex;gap:8px;align-items:flex-start;margin-bottom:12px;line-height:1.5}
+.disclaimer{text-align:center;font-size:11px;color:var(--text3);padding-bottom:16px}
+
+/* ── PLACEHOLDER ── */
+.placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:400px;text-align:center;color:var(--text3);gap:10px}
+.placeholder-ring{width:80px;height:80px;border-radius:50%;background:var(--g-light);display:flex;align-items:center;justify-content:center;font-size:36px}
+.placeholder h3{font-size:16px;font-weight:600;color:var(--text2)}
+.placeholder p{font-size:13px;max-width:220px;line-height:1.5}
+
+/* ── LOADING ── */
+.loader-overlay{display:none;position:fixed;inset:0;background:rgba(13,43,26,0.65);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:14px;color:#fff}
+.loader-overlay.on{display:flex}
+.spin{width:44px;height:44px;border:3px solid rgba(255,255,255,0.25);border-top-color:#52c98a;border-radius:50%;animation:spin 0.75s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── PRINT ── */
+@media print{
+  .hdr-actions,.calc-btn,.select-btn,.field-ctrl-btn,.loader-overlay{display:none!important}
+  .layout{grid-template-columns:1fr}
+  .input-panel{border:none}
+  body{background:#fff;padding-top:0}
+  .sum-card,.sp-card,.field-section,.detail-card{break-inside:avoid}
+}
+
+/* ── MOBILE: match style.css mobile navbar height (logo 50px + 5px*2 padding) ── */
+@media(max-width:576px){
+  :root{--navbar-h:60px}
+}
+</style>
+</head>
+<body>
+
+<div class="loader-overlay" id="loader">
+  <div class="spin"></div>
+  <span style="font-size:13px;font-weight:600">Calculating irrigation plan…</span>
+</div>
+
+<!-- HEADER -->
+<header class="navbar js-navbar">
+  <div class="logo">
+      <img src="./images/logo.png">
+  </div>
+  <button class="dashicon">&#9776;</button>
+  <button class="xIcon js-hide">&#9747;</button>
+  <nav class="menu-items js-menu-items">
+      <ul>
+          <li><a href="index.html" class="active">Home</a></li>
+          <li><a href="index.html#About">About</a></li>
+          <li><a href="index.html#Solutions">Solutions</a></li>
+          <li><a href="index.html#products">Products</a></li>
+          <li><a href="contact.html">Contact</a></li>
+      </ul>
+  </nav>
+</header>
+
+<!-- MAIN LAYOUT -->
+<div class="layout">
+
+  <!-- INPUT PANEL -->
+  <div class="input-panel">
+    <div class="inp-header">
+      <div class="inp-header-icon">📋</div>
+      <div>
+        <h2>INPUT DETAILS</h2>
+        <p>Fill in your farm details</p>
+      </div>
+    </div>
+
+    <div class="form-item">
+      <label><span class="lbl-num">1</span>🌾 Total Land to Irrigate</label>
+      <div class="inp-row">
+        <input type="number" id="area" value="1" min="0.1" step="0.1">
+        <select id="areaUnit">
+          <option value="acre">Acre ▾</option>
+          <option value="hectare">Hectare ▾</option>
+        </select>
+      </div>
+      <div class="form-hint">ℹ Enter total area you want to irrigate</div>
+    </div>
+
+    <div class="form-item">
+      <label><span class="lbl-num">2</span>🌱 Crop You Plan to Cultivate</label>
+      <select id="crop" style="width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:Inter,sans-serif;color:var(--text);background:#fff url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234a6358' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E\") no-repeat right 12px center;appearance:none;outline:none">
+        <option value="banana">🍌 Banana</option>
+        <option value="paddy">🌾 Paddy (Rice)</option>
+        <option value="groundnut">🥜 Groundnut</option>
+        <option value="cotton">☁ Cotton</option>
+        <option value="sugarcane">🎋 Sugarcane</option>
+        <option value="vegetables">🥦 Vegetables</option>
+        <option value="chilli">🌶 Chilli</option>
+        <option value="maize">🌽 Maize</option>
+        <option value="mango">🥭 Mango</option>
+        <option value="custom">⚙ Custom</option>
+      </select>
+      <div class="form-hint">ℹ Select the crop you are planning to grow</div>
+    </div>
+
+    <div id="customGroup" style="display:none" class="form-item">
+      <label><span class="lbl-num">*</span>⚙ Custom Water Need (mm/day)</label>
+      <input type="number" id="customWater" value="5" min="1" max="20" step="0.5" style="width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:Inter,sans-serif">
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-lbl">Borewell Details</div>
+
+    <div class="form-item">
+      <label><span class="lbl-num">3</span>🏗 Borewell Depth</label>
+      <div class="inp-row">
+        <input type="number" id="borewellDepth" value="300" min="10">
+        <select id="depthUnit">
+          <option value="feet">Feet ▾</option>
+          <option value="meter">Meter ▾</option>
+        </select>
+      </div>
+      <div class="form-hint">ℹ Enter the total depth of your borewell</div>
+    </div>
+
+    <div class="form-item">
+      <label>Static Water Level (optional)</label>
+      <div class="inp-row">
+        <input type="number" id="staticWL" value="60" min="0">
+        <select id="wlUnit"><option value="feet">Feet ▾</option><option value="meter">Meter ▾</option></select>
+      </div>
+    </div>
+
+    <div class="form-item">
+      <label>Pipe Diameter</label>
+      <select id="pipeDia" style="width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:Inter,sans-serif;color:var(--text);background:#fff;appearance:none;outline:none">
+        <option value="1">1 inch</option>
+        <option value="1.5">1.5 inch</option>
+        <option value="2" selected>2 inch</option>
+        <option value="3">3 inch</option>
+      </select>
+    </div>
+
+    <div class="form-item">
+      <label>Borewell Yield (LPM)</label>
+      <input type="number" id="yield" value="150" min="10" style="width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:Inter,sans-serif;color:var(--text)">
+      <div class="form-hint">ℹ Typical: 50–400 LPM</div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-lbl">Power &amp; Irrigation</div>
+
+    <div class="form-item">
+      <label><span class="lbl-num">4</span>⚡ Power Availability</label>
+      <div class="inp-row">
+        <input type="number" id="powerHours" value="8" min="1" max="24">
+        <select id="powerUnit"><option value="hours">Hours/Day ▾</option></select>
+      </div>
+      <div class="form-hint">ℹ Average number of hours power is available per day</div>
+    </div>
+
+    <div class="form-item">
+      <label>Water Source</label>
+      <select id="waterSource" style="width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:Inter,sans-serif;color:var(--text);background:#fff;appearance:none;outline:none">
+        <option value="borewell">🏗 Borewell</option>
+        <option value="openwell">🪣 Open Well</option>
+        <option value="canal">🌊 Canal</option>
+        <option value="tank">🏞 Tank / Pond</option>
+      </select>
+    </div>
+
+    <div class="form-item">
+      <label>Irrigation Preference</label>
+      <select id="irrigPref" style="width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:Inter,sans-serif;color:var(--text);background:#fff;appearance:none;outline:none">
+        <option value="sprinkler">💦 Sprinkler</option>
+        <option value="mini_sprinkler" selected>🌿 Mini Sprinkler</option>
+        <option value="rain_gun">🌧 Rain Gun</option>
+        <option value="drip">💧 Drip</option>
+      </select>
+    </div>
+
+    <div id="errorMsg" style="display:none;background:#fde8e8;color:#c0392b;border:1px solid #f5c6c6;border-radius:8px;padding:10px 12px;font-size:12px;margin-bottom:8px"></div>
+
+    <button class="calc-btn" onclick="calculate()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+      CALCULATE RECOMMENDATION
+    </button>
+
+    <div class="note-box">
+      <span>ℹ</span>
+      <span><strong>Note:</strong> Recommendations are based on standard agronomic and hydraulic calculations. Actual results may vary based on field conditions.</span>
+    </div>
+  </div>
+
+  <!-- OUTPUT PANEL -->
+  <div class="output-panel" id="outputPanel">
+    <div class="placeholder" id="placeholder">
+      <div class="placeholder-ring">🌱</div>
+      <h3>Enter farm details to begin</h3>
+      <p>Fill the form and click Calculate Recommendation to get your irrigation plan</p>
+    </div>
+    <div id="results" style="display:none"></div>
+  </div>
+</div>
+
+<script>
+const CROPS={
+  banana:{label:'Banana',water_mm:6,spacing:18,desc:'High water demand, wide spacing suitable'},
+  paddy:{label:'Paddy',water_mm:8,spacing:15,desc:'High water demand, requires consistent supply'},
+  groundnut:{label:'Groundnut',water_mm:4,spacing:12,desc:'Moderate, drought tolerant'},
+  cotton:{label:'Cotton',water_mm:5,spacing:15,desc:'Deep roots, moderate demand'},
+  sugarcane:{label:'Sugarcane',water_mm:7,spacing:20,desc:'Very high seasonal demand'},
+  vegetables:{label:'Vegetables',water_mm:5,spacing:10,desc:'Frequent light irrigation needed'},
+  chilli:{label:'Chilli',water_mm:4,spacing:12,desc:'Sensitive to waterlogging'},
+  maize:{label:'Maize',water_mm:5,spacing:15,desc:'Critical water at tasseling stage'},
+  mango:{label:'Mango',water_mm:3,spacing:24,desc:'Low demand, mainly at fruiting'},
+  custom:{label:'Custom',water_mm:5,spacing:15,desc:'User defined crop'}
+};
+
+const SPRINKLERS=[
+  {id:'s1',name:'Jain Acurain 5035 SD UL',sub:'Ultra Low Pressure Sprinkler',type:'mini_sprinkler',
+   pMin:1.0,pMax:4.0,flowMin:1128,flowMax:3118,diamMin:22,diamMax:34,spacing:18,
+   emoji:'🌀',desc:'Best for low pressure conditions\nWorks well in low water pressure',
+   stars:5,pros:['Low pressure','Energy saving','Wide coverage']},
+  {id:'s2',name:'Jain Acurain 5035 SD LP',sub:'Low Pressure Sprinkler',type:'mini_sprinkler',
+   pMin:1.5,pMax:4.0,flowMin:1210,flowMax:2490,diamMin:24.5,diamMax:35.2,spacing:18,
+   emoji:'💧',desc:'Better uniformity with slightly\nhigher throw',
+   stars:4,pros:['Higher throw','Better uniformity','Clay soils']},
+  {id:'s3',name:'Jain Acurain 5022 SD',sub:'Standard Duty Sprinkler',type:'mini_sprinkler',
+   pMin:1.5,pMax:4.0,flowMin:900,flowMax:2450,diamMin:20,diamMax:32,spacing:18,
+   emoji:'⛲',desc:'Standard performance for\nmedium pressure',
+   stars:4,pros:['Medium pressure','Durable','General use']},
+  {id:'r1',name:'Rain Gun RG-50',sub:'Heavy Duty Rain Gun',type:'rain_gun',
+   pMin:3.0,pMax:6.0,flowMin:6000,flowMax:12000,diamMin:50,diamMax:70,spacing:36,
+   emoji:'🌧',desc:'Best for large open fields\nHigh flow capacity',
+   stars:5,pros:['Large area','High flow','Field crops']},
+  {id:'r2',name:'Rain Gun RG-30',sub:'Medium Rain Gun',type:'rain_gun',
+   pMin:2.5,pMax:5.0,flowMin:3500,flowMax:7000,diamMin:36,diamMax:50,spacing:28,
+   emoji:'🌦',desc:'Versatile for medium fields\nWide operating range',
+   stars:4,pros:['Versatile','Medium pressure','Wide range']},
+  {id:'r3',name:'Rain Gun RG-20',sub:'Compact Rain Gun',type:'rain_gun',
+   pMin:2.0,pMax:4.5,flowMin:2000,flowMax:4500,diamMin:28,diamMax:40,spacing:22,
+   emoji:'🌂',desc:'Compact and easy to move\nGood for smaller fields',
+   stars:4,pros:['Portable','Lower flow','Sandy soil']},
+  {id:'sp1',name:'IPS Standard Sprinkler',sub:'Steel Body Sprinkler',type:'sprinkler',
+   pMin:1.5,pMax:4.0,flowMin:1500,flowMax:3000,diamMin:24,diamMax:36,spacing:20,
+   emoji:'🔩',desc:'Heavy duty steel construction\nLong service life',
+   stars:4,pros:['Heavy duty','Long life','Steel body']},
+  {id:'sp2',name:'Micro Jet Sprinkler',sub:'Fine Mist Sprinkler',type:'sprinkler',
+   pMin:1.0,pMax:3.5,flowMin:600,flowMax:1400,diamMin:14,diamMax:20,spacing:12,
+   emoji:'💨',desc:'Fine mist, ideal for orchards\nVery low flow rate',
+   stars:3,pros:['Fine mist','Orchards','Very low flow']},
+  {id:'sp3',name:'Wobbly T Sprinkler',sub:'Rotating Sprinkler',type:'sprinkler',
+   pMin:1.2,pMax:3.8,flowMin:1000,flowMax:2200,diamMin:18,diamMax:28,spacing:16,
+   emoji:'🌀',desc:'Rotating head for even coverage\nSuitable for all crops',
+   stars:4,pros:['Rotating','Even coverage','Universal']},
+  {id:'d1',name:'Drip 16mm Inline',sub:'Inline Drip Emitter',type:'drip',
+   pMin:0.5,pMax:2.0,flowMin:180,flowMax:220,diamMin:0,diamMax:0,spacing:0.6,
+   emoji:'💦',desc:'Maximum water use efficiency\nIdeal for fertigation',
+   stars:5,pros:['Max efficiency','Water saving','Fertigation']},
+  {id:'d2',name:'Drip 12mm Emitter',sub:'Compact Emitter',type:'drip',
+   pMin:0.8,pMax:2.5,flowMin:140,flowMax:180,diamMin:0,diamMax:0,spacing:0.5,
+   emoji:'💧',desc:'Compact for row crops\nLow cost solution',
+   stars:4,pros:['Compact','Row crops','Low cost']},
+];
+
+const HP_STEPS=[1,1.5,2,3,5,7.5,10,15,20];
+
+let currentResults=null;
+let selectedSprinkler=null;
+
+document.getElementById('crop').addEventListener('change',function(){
+  document.getElementById('customGroup').style.display=this.value==='custom'?'block':'none';
+});
+
+function getAreaM2(){
+  const a=parseFloat(document.getElementById('area').value)||1;
+  return document.getElementById('areaUnit').value==='acre'?a*4047:a*10000;
+}
+
+function calculate(){
+  const err=document.getElementById('errorMsg');
+  err.style.display='none';
+  const area=parseFloat(document.getElementById('area').value);
+  if(!area||area<=0){err.textContent='⚠ Area must be greater than 0';err.style.display='block';return;}
+  document.getElementById('loader').classList.add('on');
+  setTimeout(()=>{try{doCalc();}catch(e){console.error(e);}document.getElementById('loader').classList.remove('on');},1000);
+}
+
+function doCalc(){
+  const areaM2=getAreaM2();
+  const areaDisplay=parseFloat(document.getElementById('area').value);
+  const areaUnit=document.getElementById('areaUnit').value;
+  const cropKey=document.getElementById('crop').value;
+  const crop=CROPS[cropKey];
+  const waterMM=cropKey==='custom'?parseFloat(document.getElementById('customWater').value)||5:crop.water_mm;
+  const depthFt=parseFloat(document.getElementById('borewellDepth').value)||300;
+  const depthUnit=document.getElementById('depthUnit').value;
+  const depthM=depthUnit==='feet'?depthFt*0.3048:depthFt;
+  const swlFt=parseFloat(document.getElementById('staticWL').value)||60;
+  const swlM=document.getElementById('wlUnit').value==='feet'?swlFt*0.3048:swlFt;
+  const powerHours=parseFloat(document.getElementById('powerHours').value)||8;
+  const yieldLPM=parseFloat(document.getElementById('yield').value)||150;
+  const irrigPref=document.getElementById('irrigPref').value;
+  const pipeDia=document.getElementById('pipeDia').value;
+
+  const waterLDay=areaM2*waterMM;
+  const flowLPH=waterLDay/powerHours;
+  const flowLPS=flowLPH/3600;
+
+  const totalHead=(depthM-swlM)*3.281+20;
+  const rawHP=(flowLPS*totalHead*0.3048)/(75*0.70);
+  const hpMargin=rawHP*1.10;
+  const recHP=HP_STEPS.find(h=>h>=hpMargin)||HP_STEPS[HP_STEPS.length-1];
+
+  const pool=SPRINKLERS.filter(s=>s.type===irrigPref);
+  const usePool=pool.length>0?pool:SPRINKLERS.filter(s=>s.type==='mini_sprinkler');
+
+  const scored=usePool.map(sp=>{
+    const covM2=sp.spacing*sp.spacing;
+    const qty=Math.ceil(areaM2/covM2);
+    const avgFlow=(sp.flowMin+sp.flowMax)/2;
+    const totalFlow=avgFlow*qty;
+    const runtime=waterLDay/totalFlow;
+    const yieldOk=yieldLPM*60>=totalFlow?0:5000;
+    const score=Math.abs(avgFlow-(flowLPH/Math.max(qty,1)))+yieldOk;
+    return{...sp,qty,avgFlow,totalFlow,runtime,score};
+  }).sort((a,b)=>a.score-b.score).slice(0,3);
+
+  selectedSprinkler=scored[0];
+
+  currentResults={areaM2,scored,recHP,waterLDay,flowLPH,flowLPS,
+    totalHead,rawHP,hpMargin,waterMM,crop,cropKey,
+    areaDisplay,areaUnit,yieldLPM,powerHours,pipeDia,depthM,swlM};
+
+  const pipeCapLPS={'1':0.8,'1.5':1.8,'2':3.2,'3':7.0};
+  const capLPS=pipeCapLPS[pipeDia]||3.2;
+  const pipeOk=flowLPS<=capLPS;
+
+  document.getElementById('placeholder').style.display='none';
+  const out=document.getElementById('results');
+  out.style.display='block';
+
+  const ranks=['OPTION 1','OPTION 2','OPTION 3'];
+  const badgeCls=['b1','b2','b3'];
+  const cardCls=['opt1','opt2','opt3'];
+
+  out.innerHTML=`
+  <div class="summary-bar">
+    <h2>🎯 RECOMMENDATION SUMMARY</h2>
+    <div class="area-chip">All options are calculated for ${areaDisplay} ${areaUnit}</div>
+  </div>
+  <div class="summary-grid">
+    <div class="sum-card highlight">
+      <div class="sum-card-icon ic-blue">🤖</div>
+      <div class="sum-card-lbl">Pump Power Required</div>
+      <div class="sum-card-val blue">${recHP} HP</div>
+      <div class="sum-card-sub">Recommended Pump</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-card-icon ic-green">🌿</div>
+      <div class="sum-card-lbl">Sprinkler Type</div>
+      <div class="sum-card-val green" style="font-size:20px;margin-top:4px">${scored.length}-${scored.length} Options</div>
+      <div class="sum-card-sub">Available</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-card-icon ic-purple">🔢</div>
+      <div class="sum-card-lbl">Total Sprinklers Required</div>
+      <div class="sum-card-val" style="color:var(--purple-txt)">${scored[0].qty}</div>
+      <div class="sum-card-sub">For ${areaDisplay} ${areaUnit}</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-card-icon ic-amber">⏱</div>
+      <div class="sum-card-lbl">Daily Run Time (Est.)</div>
+      <div class="sum-card-val amber">${scored[0].runtime.toFixed(1)}</div>
+      <div class="sum-card-sub">Hours Per Day</div>
+    </div>
+  </div>
+
+  <div class="options-bar">
+    <h2>💧 SPRINKLER OPTIONS</h2>
+    <span style="font-size:12px;color:var(--text2)">Choose any one of the options below</span>
+    <div class="options-info">All options are calculated for ${areaDisplay} ${areaUnit}</div>
+  </div>
+  <div class="sprinkler-grid">
+    ${scored.map((sp,i)=>`
+    <div class="sp-card ${cardCls[i]}">
+      <div class="sp-card-head">
+        <div class="opt-badge ${badgeCls[i]}">${ranks[i]}</div>
+        <div class="sp-name">${sp.name}</div>
+        <div class="sp-sub">${sp.sub}</div>
+      </div>
+      <div class="sp-img-area">${sp.emoji}</div>
+      <div class="sp-desc">${sp.desc.replace('\n','<br>')}</div>
+      <div class="sp-specs">
+        <div class="sp-spec-row">
+          <span class="sp-spec-key"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg> Wetted Diameter</span>
+          <span class="sp-spec-val">${sp.diamMin} – ${sp.diamMax} m</span>
+        </div>
+        <div class="sp-spec-row">
+          <span class="sp-spec-key"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg> Operating Pressure</span>
+          <span class="sp-spec-val">${sp.pMin} – ${sp.pMax} kg/cm²</span>
+        </div>
+        <div class="sp-spec-row">
+          <span class="sp-spec-key"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg> Flow Rate</span>
+          <span class="sp-spec-val">${sp.flowMin.toLocaleString()} – ${sp.flowMax.toLocaleString()} LPH</span>
+        </div>
+        <div class="sp-spec-row">
+          <span class="sp-spec-key"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg> No. of Sprinklers Required</span>
+          <span class="sp-spec-val">${sp.qty} Nos.</span>
+        </div>
+        <div class="sp-spec-row">
+          <span class="sp-spec-key"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16M4 12h16M4 20h8"/></svg> Spacing (Recommended)</span>
+          <span class="sp-spec-val">${sp.spacing}m × ${sp.spacing}m</span>
+        </div>
+        <div class="sp-spec-row">
+          <span class="sp-spec-key">✅ Yield Status</span>
+          <span class="sp-spec-val" style="color:${yieldLPM*60>=sp.totalFlow?'var(--g5)':'#c0392b'}">${yieldLPM*60>=sp.totalFlow?'Sufficient':'Check yield'}</span>
+        </div>
+      </div>
+      <div class="sp-card-footer">
+        <div>
+          <div class="runtime-label">⏱ Daily Running Hours</div>
+          <div class="runtime-val">${sp.runtime.toFixed(1)} Hours/Day</div>
+        </div>
+        <button class="select-btn" onclick="selectOption(${i})">Select ✓</button>
+      </div>
+    </div>`).join('')}
+  </div>
+
+  <div class="field-section">
+    <div class="field-section-hdr">
+      <h3>📐 Field Layout — Sprinkler Placement</h3>
+      <div class="field-controls">
+        ${scored.map((sp,i)=>`<button class="field-ctrl-btn${i===0?' active':''}" onclick="drawField(${i})" id="fcb${i}">${ranks[i]}</button>`).join('')}
+      </div>
+    </div>
+    <div class="field-canvas-wrap" id="fieldWrap">
+      <canvas id="fieldCanvas" style="width:100%;display:block"></canvas>
+    </div>
+    <div class="field-legend">
+      <div class="leg-item"><div class="leg-dot" style="background:#1a5235;border:2px solid #1a5235"></div> Sprinkler head</div>
+      <div class="leg-item"><div class="leg-dot" style="background:rgba(82,201,138,0.2);border:2px solid #52c98a"></div> Coverage zone</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#e8f5ec;border:2px dashed #2e8b5a"></div> Field boundary</div>
+      <div id="fieldInfo" style="margin-left:auto;font-size:11px;color:var(--text2)"></div>
+    </div>
+  </div>
+
+  <div class="details-grid">
+    <div class="detail-card">
+      <h4>📊 Calculation Summary</h4>
+      <div class="detail-row"><span class="detail-key">Land area</span><span class="detail-val">${areaDisplay} ${areaUnit} = ${areaM2.toFixed(0)} m²</span></div>
+      <div class="detail-row"><span class="detail-key">Crop water need</span><span class="detail-val">${waterMM} mm/day</span></div>
+      <div class="detail-row"><span class="detail-key">Total water/day</span><span class="detail-val">${(waterLDay/1000).toFixed(2)} m³ (${waterLDay.toFixed(0)} L)</span></div>
+      <div class="detail-row"><span class="detail-key">Required flow</span><span class="detail-val">${flowLPH.toFixed(0)} LPH / ${flowLPS.toFixed(3)} LPS</span></div>
+      <div class="detail-row"><span class="detail-key">Pumping head</span><span class="detail-val">${totalHead.toFixed(1)} ft</span></div>
+      <div class="detail-row"><span class="detail-key">Calc. HP (raw)</span><span class="detail-val">${rawHP.toFixed(2)} → +10% → ${recHP} HP</span></div>
+    </div>
+    <div class="detail-card">
+      <h4>🔧 Pipe &amp; System Check</h4>
+      <div class="detail-row"><span class="detail-key">Selected pipe</span><span class="detail-val">${pipeDia}" diameter</span></div>
+      <div class="detail-row"><span class="detail-key">Pipe capacity</span><span class="detail-val">${(pipeCapLPS[pipeDia]||3.2).toFixed(1)} LPS</span></div>
+      <div class="detail-row"><span class="detail-key">Required flow</span><span class="detail-val">${flowLPS.toFixed(3)} LPS</span></div>
+      <div class="detail-row"><span class="detail-key">Pipe status</span><span class="detail-val" style="color:${pipeOk?'var(--g5)':'#c0392b'}">${pipeOk?'✅ Adequate':'⚠ Upgrade needed'}</span></div>
+      <div class="detail-row"><span class="detail-key">Borewell yield</span><span class="detail-val">${yieldLPM} LPM = ${yieldLPM*60} LPH</span></div>
+      <div class="detail-row"><span class="detail-key">Yield vs demand</span><span class="detail-val" style="color:${yieldLPM*60>=flowLPH?'var(--g5)':'#c0392b'}">${yieldLPM*60>=flowLPH?'✅ Sufficient':'⚠ May be low'}</span></div>
+    </div>
+  </div>
+
+  <div class="bottom-note">
+    <span style="font-size:16px">⚠</span>
+    <span><strong>Note:</strong> Maintain proper filtration and recommended pressure for best performance and longer life of sprinklers. Always install a pressure gauge and regulator at the pump outlet.</span>
+  </div>
+  <div class="disclaimer">Disclaimer: This is an automated recommendation. Please consult your irrigation expert for final design and field verification.</div>
+  `;
+
+  setTimeout(()=>drawField(0),50);
+}
+
+function selectOption(i){
+  if(!currentResults)return;
+  const sp=currentResults.scored[i];
+  alert(`✅ Selected: ${sp.name}\n\nUnits Required: ${sp.qty}\nSpacing: ${sp.spacing}m × ${sp.spacing}m\nRuntime: ${sp.runtime.toFixed(1)} hrs/day\n\nProceed to generate quotation.`);
+}
+
+function drawField(idx){
+  if(!currentResults)return;
+  for(let i=0;i<3;i++){
+    const b=document.getElementById('fcb'+i);
+    if(b){b.className='field-ctrl-btn'+(i===idx?' active':'');}
+  }
+
+  const sp=currentResults.scored[idx];
+  const areaM2=currentResults.areaM2;
+
+  const canvas=document.getElementById('fieldCanvas');
+  const wrap=document.getElementById('fieldWrap');
+  const W=wrap.clientWidth||600;
+  const H=Math.max(220,Math.min(400,W*0.55));
+  canvas.width=W*2;canvas.height=H*2;
+  canvas.style.height=H+'px';
+  const ctx=canvas.getContext('2d');
+  ctx.scale(2,2);
+
+  const PAD=28;
+  const fw=W-PAD*2, fh=H-PAD*2;
+
+  ctx.fillStyle='#e8f5ec';
+  ctx.fillRect(0,0,W,H);
+
+  ctx.strokeStyle='#2e8b5a';
+  ctx.lineWidth=2;
+  ctx.setLineDash([6,4]);
+  ctx.strokeRect(PAD,PAD,fw,fh);
+  ctx.setLineDash([]);
+  ctx.fillStyle='rgba(232,245,236,0.6)';
+  ctx.fillRect(PAD,PAD,fw,fh);
+
+  ctx.fillStyle='#1a5235';
+  ctx.font='bold 11px Inter,sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText(`Field: ${currentResults.areaDisplay} ${currentResults.areaUnit} (${areaM2.toFixed(0)} m²)`,W/2,15);
+
+  const side=Math.sqrt(areaM2);
+  const scaleX=fw/side, scaleY=fh/side;
+  const spPxX=sp.spacing*scaleX, spPxY=sp.spacing*scaleY;
+  const coverR=Math.min(spPxX,spPxY)*0.48;
+
+  let count=0;
+  const positions=[];
+  for(let y=PAD+spPxY/2;y<PAD+fh-1;y+=spPxY){
+    for(let x=PAD+spPxX/2;x<PAD+fw-1;x+=spPxX){
+      positions.push({x,y});
+      count++;
+    }
+  }
+
+  positions.forEach(({x,y})=>{
+    ctx.beginPath();
+    ctx.arc(x,y,coverR,0,Math.PI*2);
+    ctx.fillStyle='rgba(82,201,138,0.13)';
+    ctx.fill();
+    ctx.strokeStyle='rgba(46,139,90,0.35)';
+    ctx.lineWidth=0.8;
+    ctx.stroke();
+  });
+
+  ctx.strokeStyle='rgba(30,107,65,0.3)';
+  ctx.lineWidth=1;
+  let rowY=PAD+spPxY/2;
+  while(rowY<PAD+fh-1){
+    ctx.beginPath();
+    ctx.moveTo(PAD,rowY);ctx.lineTo(PAD+fw,rowY);
+    ctx.stroke();
+    rowY+=spPxY;
+  }
+  ctx.strokeStyle='rgba(30,107,65,0.5)';
+  ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(PAD,PAD);ctx.lineTo(PAD,PAD+fh);ctx.stroke();
+
+  positions.forEach(({x,y})=>{
+    ctx.beginPath();
+    ctx.arc(x,y,5,0,Math.PI*2);
+    ctx.fillStyle='#1a5235';
+    ctx.fill();
+    ctx.strokeStyle='#fff';
+    ctx.lineWidth=1.5;
+    ctx.stroke();
+    for(let a=0;a<360;a+=45){
+      const rad=a*Math.PI/180;
+      ctx.beginPath();
+      ctx.moveTo(x+6*Math.cos(rad),y+6*Math.sin(rad));
+      ctx.lineTo(x+12*Math.cos(rad),y+12*Math.sin(rad));
+      ctx.strokeStyle='rgba(46,139,90,0.6)';
+      ctx.lineWidth=0.8;
+      ctx.stroke();
+    }
+  });
+
+  if(positions.length>=2){
+    const p0=positions[0],p1=positions[1];
+    ctx.strokeStyle='#888';ctx.lineWidth=0.7;ctx.setLineDash([3,3]);
+    ctx.beginPath();ctx.moveTo(p0.x,p0.y+coverR+4);ctx.lineTo(p1.x,p0.y+coverR+4);ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='#555';ctx.font='9px Inter,sans-serif';ctx.textAlign='center';
+    ctx.fillText(`${sp.spacing}m`,(p0.x+p1.x)/2,p0.y+coverR+13);
+  }
+
+  ctx.fillStyle='#1a5235';
+  ctx.font='bold 10px Inter,sans-serif';
+  ctx.textAlign='left';
+  ctx.fillText(`${count} sprinklers shown  |  ${sp.spacing}m × ${sp.spacing}m spacing  |  ${sp.name}`,PAD+2,H-6);
+
+  const info=document.getElementById('fieldInfo');
+  if(info)info.textContent=`${count} sprinklers on this layout`;
+}
+
+function exportPDF(){
+  const style=document.createElement('style');
+  style.textContent='@media print{.hdr-actions,.calc-btn,.select-btn,.field-ctrl-btn{display:none!important}.layout{grid-template-columns:1fr!important}}';
+  document.head.appendChild(style);
+  window.print();
+  setTimeout(()=>document.head.removeChild(style),2000);
+}
+</script>
+<!--................js file ..................  -->
+<script src="./index.js"></script>
+</body>
+</html>
